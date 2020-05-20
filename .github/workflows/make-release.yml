@@ -1,0 +1,31 @@
+name: Create tag and release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'      
+    - name: Bump version and push tag
+      id: create-tag
+      uses: anothrNick/github-tag-action@1.22.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        INITIAL_VERSION: v1.0.0
+        DEFAULT_BUMP: patch
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.create-tag.outputs.new_tag }}
+        release_name: ${{ steps.create-tag.outputs.new_tag }}
+        body: ${{ steps.changelog.outputs.changelog }}
+        draft: false
+        prerelease: false
