@@ -26,6 +26,5 @@ jobs:
       with:
         tag_name: ${{ steps.create-tag.outputs.new_tag }}
         release_name: ${{ steps.create-tag.outputs.new_tag }}
-        body: ${{ steps.changelog.outputs.changelog }}
         draft: false
         prerelease: false
